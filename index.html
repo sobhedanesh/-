@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>صبح دانش - سامانه هوش مصنوعی</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Lalezar', system-ui, sans-serif;
+            overflow: hidden;
+            background: #000;
+            color: white;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 70%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            background: #00ff9d;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff9d;
+            animation: twinkle 4s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        #main-image {
+            width: 88%;
+            max-width: 390px;
+            border-radius: 20px;
+            box-shadow: none;
+            transform: scale(0.6);
+            opacity: 0;
+            transition: all 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 10;
+        }
+        
+        .logo-text {
+            margin-top: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #00ff9d;
+            text-shadow: 0 0 15px #00ff9d;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 12px 28px;
+            border: 1px solid rgba(0, 255, 157, 0.4);
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+        }
+        
+        .slide {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a2a1a 0%, #000000 100%);
+            color: white;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 500;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        .slide img {
+            width: 85%;
+            max-width: 380px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .slide-content {
+            text-align: center;
+            font-size: 1.65rem;
+            line-height: 1.4;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .icons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 55px;
+            margin: 30px 0;
+        }
+        
+        .icon-item {
+            text-align: center;
+        }
+        
+        .icon-item i {
+            font-size: 8rem;
+            color: #00ff9d;
+            margin-bottom: 12px;
+        }
+        
+        .icon-item div {
+            font-size: 2rem;
+            margin-top: 10px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .action-area {
+            width: 85%;
+            max-width: 380px;
+            margin: 30px auto;
+            position: relative;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00ff9d, #00cc7a);
+            transition: width 5s linear;
+        }
+        
+        .next-btn {
+            display: none;
+            background: #00cc7a;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            font-family: 'Lalezar', sans-serif;
+            box-shadow: 0 8px 20px rgba(0, 204, 122, 0.4);
+            cursor: pointer;
+            width: auto;
+            min-width: 150px;
+            text-align: center;
+            transition: transform 0.2s, opacity 0.3s;
+            animation: fadeScale 0.4s ease;
+        }
+        
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        #registration-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lalezar', sans-serif;
+        }
+        
+        .register-card {
+            background: rgba(255,255,255,0.95);
+            width: 85%;
+            max-width: 420px;
+            border-radius: 48px;
+            padding: 35px 25px;
+            text-align: center;
+            color: #222;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+            direction: rtl;
+        }
+        
+        .register-card h3 {
+            font-size: 2rem;
+            color: #00cc7a;
+            margin-bottom: 25px;
+        }
+        
+        .register-card input {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-family: 'Lalezar', sans-serif;
+            outline: none;
+            transition: 0.2s;
+        }
+        
+        .register-card input:focus {
+            border-color: #00cc7a;
+        }
+        
+        .register-card button {
+            background: #00cc7a;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-family: 'Lalezar', sans-serif;
+            width: 100%;
+        }
+        
+        #dashboard-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1300;
+            display: none;
+            flex-direction: column;
+            background: linear-gradient(135deg, #0a2a1a 0%, #000000 100%);
+            overflow-y: auto;
+        }
+        
+        .greeting-box {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            padding: 20px 35px;
+            border-radius: 70px;
+            font-size: 2rem;
+            color: #00ff9d;
+            text-shadow: 0 0 8px #00cc7a;
+            direction: rtl;
+            text-align: center;
+            margin: 40px 20px 20px;
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .greeting-box span {
+            font-weight: bold;
+            color: white;
+            background: #00cc7a;
+            padding: 5px 18px;
+            border-radius: 50px;
+            margin-right: 12px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 20px 30px;
+            flex-wrap: wrap;
+        }
+        
+        .thin-btn {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: 1.5px solid #00cc7a;
+            color: #00ff9d;
+            padding: 8px 25px;
+            border-radius: 40px;
+            font-family: 'Lalezar', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .thin-btn:hover {
+            background: #00cc7a;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1400;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: rgba(30,30,30,0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 48px;
+            padding: 35px 25px;
+            text-align: center;
+            max-width: 400px;
+            width: 85%;
+            border: 1px solid #00cc7a;
+            direction: rtl;
+        }
+        
+        .modal-content h3 {
+            color: #00ff9d;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .modal-content p {
+            color: white;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        
+        .modal-content .email {
+            color: #00ff9d;
+            font-size: 1.3rem;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .close-modal {
+            background: #00cc7a;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-family: 'Lalezar', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,204,122,0.95);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            z-index: 1500;
+            display: none;
+            animation: fadeInUp 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .download-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            padding: 0 20px 40px;
+        }
+        
+        .download-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            overflow: hidden;
+            width: 100%;
+            text-align: right;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1.5px solid rgba(0, 204, 122, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .download-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 204, 122, 0.2);
+        }
+        
+        .card-image {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+        
+        .card-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+            pointer-events: none;
+        }
+        
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card-content h3 {
+            color: #00ff9d;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0,255,157,0.3);
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: #00cc7a;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Lalezar', sans-serif;
+            font-size: 1.3rem;
+            transition: background 0.3s ease, transform 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .download-btn:hover {
+            background: #00995c;
+            transform: scale(1.05);
+        }
+        
+        .web-card-image {
+            width: 100%;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        .web-card-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .guide-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a2a1a 0%, #000000 100%);
+            z-index: 1600;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+        
+        .guide-title {
+            color: #00ff9d;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .guide-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 35px 25px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(0, 255, 157, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .guide-steps {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .guide-steps li {
+            color: white;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            padding-right: 25px;
+            position: relative;
+        }
+        
+        .guide-steps li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: #00ff9d;
+            font-size: 1.5rem;
+        }
+        
+        .neon-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .neon-blue {
+            background: transparent;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Lalezar', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #00d4ff;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .neon-blue:hover {
+            background: #00d4ff;
+            color: black;
+            box-shadow: 0 0 20px #00d4ff;
+        }
+        
+        .neon-blue img {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .neon-green {
+            background: transparent;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Lalezar', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #00ff9d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .neon-green:hover {
+            background: #00ff9d;
+            color: black;
+            box-shadow: 0 0 20px #00ff9d;
+        }
+        
+        .neon-green img {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .back-button {
+            background: #00cc7a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Lalezar', sans-serif;
+            font-size: 1.3rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .back-button:hover {
+            background: #00995c;
+        }
+        
+        @media (max-width: 600px) {
+            .icon-item i { font-size: 6rem; }
+            .icon-item div { font-size: 1.6rem; }
+            .greeting-box { font-size: 1.4rem; padding: 15px 20px; margin: 30px 20px 20px; }
+            .card-content h3 { font-size: 1.5rem; }
+            .download-btn { padding: 10px 25px; font-size: 1.1rem; }
+            .thin-btn { font-size: 1rem; padding: 6px 20px; }
+            .notification { white-space: normal; text-align: center; width: 80%; font-size: 0.9rem; }
+            .guide-title { font-size: 1.5rem; }
+            .guide-steps li { font-size: 0.95rem; }
+            .neon-blue, .neon-green { font-size: 1rem; padding: 8px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="intro-screen">
+        <div class="stars" id="stars-container"></div>
+        <img id="main-image" src="https://uploadkon.ir/uploads/17b306_26IMG-20260101-114606-864.png" alt="صبح دانش">
+        <div class="logo-text" id="logo-text">سامانه دانلود هوش مصنوعی صبح دانش</div>
+    </div>
+
+    <div class="slide" id="slide-1">
+        <img src="https://uploadkon.ir/uploads/0fee06_26Picsart-26-06-06-10-32-10-327.jpg" alt="خوش آمدید">
+        <div class="slide-content">سلام به هوش مصنوعی صبح دانش خوش اومدی !</div>
+        <div class="action-area">
+            <div class="progress-container" id="progress-container-1">
+                <div class="progress-bar" id="progress-1"></div>
+            </div>
+            <button class="next-btn" id="next-1">بعدی</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+        <img src="https://uploadkon.ir/uploads/eab806_26Picsart-26-06-06-10-27-21-569.png" alt="صبح دانش">
+        <div class="slide-content">وقتشه کار هات رو بسپاری به دست صبح دانش !</div>
+        <div class="action-area">
+            <div class="progress-container" id="progress-container-2">
+                <div class="progress-bar" id="progress-2"></div>
+            </div>
+            <button class="next-btn" id="next-2">بعدی</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+        <div class="slide-content" style="margin-bottom: 20px;">امکان استفاده در هر دستگاهی</div>
+        <div class="icons-grid">
+            <div class="icon-item"><i class="fab fa-android"></i><div>اندروید</div></div>
+            <div class="icon-item"><i class="fab fa-apple"></i><div>آیفون</div></div>
+            <div class="icon-item"><i class="fab fa-windows"></i><div>ویندوز</div></div>
+            <div class="icon-item"><i class="fab fa-google"></i><div>گوگل</div></div>
+        </div>
+        <div class="action-area">
+            <div class="progress-container" id="progress-container-3">
+                <div class="progress-bar" id="progress-3"></div>
+            </div>
+            <button class="next-btn" id="next-3">بعدی</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-4">
+        <img src="https://uploadkon.ir/uploads/2ced06_26Picsart-26-06-06-10-29-19-972.png" alt="دانلود">
+        <div class="slide-content">همین الان دانلودش کن</div>
+        <div class="action-area">
+            <div class="progress-container" id="progress-container-4">
+                <div class="progress-bar" id="progress-4"></div>
+            </div>
+            <button class="next-btn" id="enter-system-btn">ورود به سامانه</button>
+        </div>
+    </div>
+
+    <div id="registration-screen">
+        <div class="register-card">
+            <h3>✨ ثبت نام سریع ✨</h3>
+            <input type="text" id="reg-name" placeholder="نام و نام خانوادگی" autocomplete="off">
+            <input type="tel" id="reg-phone" placeholder="شماره موبایل" autocomplete="off">
+            <button id="submit-register">ورود به پنل کاربری</button>
+        </div>
+    </div>
+
+    <div id="dashboard-screen">
+        <div class="greeting-box" id="greeting-message">
+            سلام، <span id="user-name-display">کاربر عزیز</span>
+            <div style="font-size: 1rem; margin-top: 10px;">به سامانه دانلود هوش مصنوعی صبح دانش خوش اومدی</div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="thin-btn" id="complaint-btn">📋 ثبت شکایات</button>
+            <button class="thin-btn" id="download-guide-btn">📱 دانلود برنامه</button>
+        </div>
+        
+        <div class="download-cards" id="downloads-section">
+            <div class="download-card">
+                <div class="card-image">
+                    <img src="https://uploadkon.ir/uploads/694013_26Picsart-26-06-06-10-49-43-445.png" alt="اندروید">
+                </div>
+                <div class="card-content">
+                    <h3>دانلود برای اندروید</h3>
+                    <button class="download-btn" onclick="showAndroidGuide()">دانلود</button>
+                </div>
+            </div>
+            
+            <div class="download-card">
+                <div class="card-image">
+                    <img src="https://uploadkon.ir/uploads/e7f513_26Picsart-26-06-06-10-51-44-689.png" alt="آیفون">
+                </div>
+                <div class="card-content">
+                    <h3>دانلود برای آیفون</h3>
+                    <button class="download-btn" onclick="showIOSGuide()">دانلود</button>
+                </div>
+            </div>
+            
+            <div class="download-card">
+                <div class="card-image">
+                    <img src="https://uploadkon.ir/uploads/437213_26Picsart-26-06-06-10-56-18-716.png" alt="ویندوز">
+                </div>
+                <div class="card-content">
+                    <h3>دانلود برای ویندوز</h3>
+                    <button class="download-btn" onclick="showWindowsGuide()">دانلود</button>
+                </div>
+            </div>
+            
+            <div class="download-card">
+                <div class="web-card-image">
+                    <img src="https://uploadkon.ir/uploads/d7b113_26Picsart-26-06-13-13-12-21-734.png" alt="نسخه تحت وب">
+                </div>
+                <div class="card-content">
+                    <h3>نسخه تحت وب</h3>
+                    <button class="download-btn" onclick="alert('این قسمت بزودی فعال خواهد شد')">ورود به سایت</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحه راهنمای اندروید -->
+    <div id="android-guide" class="guide-screen">
+        <h2 class="guide-title">📱 مراحل دانلود برنامه برای اندروید</h2>
+        <div class="guide-card">
+            <ul class="guide-steps">
+                <li>ابتدا از طریق فروشگاه‌های زیر فایل رو دانلود کنید</li>
+                <li>موقع دانلود فایل از شما اسکن میخاد. روی اسکن بزنید ممکنه تایم زیادی طول بکشه پس روی نوشته ی more details کلیک کنید</li>
+                <li>بعد از کلیک روی نوشته more details روی install without scanning رو بزنید</li>
+                <li>حالا هوش مصنوعی دانلود شدش ✅</li>
+            </ul>
+            <div class="neon-buttons">
+                <button class="neon-blue" onclick="window.open('https://myket.ir/app/com.webapp.sdai', '_blank')">
+                    <img src="https://uploadkon.ir/uploads/f19613_26لوگوی-مایکت.png" alt="مایکت"> دانلود از مایکت
+                </button>
+                <button class="neon-green" onclick="alert('این قسمت بزودی فعال خواهد شد')">
+                    <img src="https://uploadkon.ir/uploads/4b7813_26لوگوی-بازار.png" alt="بازار"> دانلود از بازار
+                </button>
+            </div>
+            <button class="back-button" onclick="closeAndroidGuide()">بازگشت به داشبورد</button>
+        </div>
+    </div>
+
+    <!-- صفحه راهنمای آیفون -->
+    <div id="ios-guide" class="guide-screen">
+        <h2 class="guide-title">🍏 مراحل دانلود برای آیفون</h2>
+        <div class="guide-card">
+            <ul class="guide-steps">
+                <li>ابتدا روی دکمه هوش مصنوعی صبح دانش که این پایین میبینید کلیک کنید</li>
+                <li>در سافاری روی قسمت اشتراک گذاری یا همون share کلیک کنید</li>
+                <li>در قسمت اشتراک گذاری به پایین تر بیاید و روی دکمه add to home screen رو بزنید</li>
+                <li>تو این قسمت شما یک اسم و عکس میبینید اگه تجربه بهتری میخواید اسم برنامه رو به sd.ai تغییر بدید</li>
+                <li>روی دکمه آبی بالا کلیک کنید تا دانلود بشه و تمام</li>
+                <li>اگه در مرحله چهار عکسی مشاهده نکردید حتما به پشتیبانی اطلاع بدید</li>
+            </ul>
+            <div class="neon-buttons">
+                <button class="neon-green" onclick="window.open('https://sobhedanesh.github.io/ios.sd.ai/', '_blank')">🚀 ورود به هوش مصنوعی صبح دانش</button>
+            </div>
+            <button class="back-button" onclick="closeIOSGuide()">بازگشت به داشبورد</button>
+        </div>
+    </div>
+
+    <!-- صفحه راهنمای ویندوز -->
+    <div id="windows-guide" class="guide-screen">
+        <h2 class="guide-title">💻 مراحل نصب برای ویندوز</h2>
+        <div class="guide-card">
+            <ul class="guide-steps">
+                <li>روی دکمه دانلود زیر کلیک کنید تا فایل دانلود بشه</li>
+                <li>بعد از دانلود یک صفحه کامند پرامپت باز میشه که باید صبر کنید</li>
+                <li>بعد از اتمام صفحه کامند بسته میشه و برنامه باز میشه</li>
+                <li>روی آیکون برنامه کلیک راست کنید و روی pin to taskbar رو بزنید</li>
+                <li>الان شما میتونید از هوش مصنوعی استفاده کنید</li>
+            </ul>
+            <div class="neon-buttons">
+                <button class="neon-green" onclick="window.open('https://s6.uplod.ir:182/d/2k2xgf4f4hvhuf6tlwn5l7to6bkm7e2zdvnbeppxq3y4yoh4iqc5nyfwdtnjagrmtj3jvezw/sd-ai.exe', '_blank')">📥 دانلود برنامه</button>
+            </div>
+            <button class="back-button" onclick="closeWindowsGuide()">بازگشت به داشبورد</button>
+        </div>
+    </div>
+
+    <div id="complaint-modal" class="modal">
+        <div class="modal-content">
+            <h3>📧 پشتیبانی و ثبت شکایات</h3>
+            <p>برای ثبت شکایت، پیشنهاد یا ارتباط با پشتیبانی، می‌توانید از طریق ایمیل زیر با ما در ارتباط باشید.</p>
+            <p>تیم پشتیبانی صبح دانش در اسرع وقت به پیام شما پاسخ خواهد داد.</p>
+            <div class="email">arshammajidi168@gmail.com</div>
+            <button class="close-modal" onclick="closeModal()">متوجه شدم</button>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        const STORAGE_KEY = 'sobh_danesh_user';
+        
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            if(!container) return;
+            for (let i = 0; i < 800; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3.5 + 1.2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `-${Math.random() * 4}s`;
+                container.appendChild(star);
+            }
+        }
+
+        let currentSlide = 1;
+        let canGoNext = false;
+        let progressTimeout = null;
+
+        function showSlide(n) {
+            document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
+            const slideEl = document.getElementById(`slide-${n}`);
+            if(slideEl) slideEl.classList.add('active');
+            currentSlide = n;
+            canGoNext = false;
+            
+            const actionArea = slideEl.querySelector('.action-area');
+            const progressContainer = actionArea.querySelector('.progress-container');
+            const nextBtn = actionArea.querySelector('.next-btn');
+            
+            progressContainer.style.display = 'block';
+            progressContainer.style.opacity = '1';
+            nextBtn.style.display = 'none';
+            
+            const progress = document.getElementById(`progress-${n}`);
+            if(progress) progress.style.width = '0%';
+            
+            setTimeout(() => {
+                if(progress) progress.style.width = '100%';
+            }, 100);
+            
+            if (progressTimeout) clearTimeout(progressTimeout);
+            
+            progressTimeout = setTimeout(() => {
+                if (currentSlide === n) {
+                    canGoNext = true;
+                    progressContainer.style.transition = 'opacity 0.3s';
+                    progressContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        nextBtn.style.display = 'block';
+                        nextBtn.style.opacity = '0';
+                        nextBtn.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            nextBtn.style.opacity = '1';
+                            nextBtn.style.transform = 'scale(1)';
+                        }, 20);
+                    }, 300);
+                }
+            }, 5300);
+        }
+
+        function nextSlide() {
+            if (!canGoNext) return;
+            if (currentSlide < 4) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function showRegistration() {
+            if (!canGoNext) return;
+            document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
+            document.getElementById('registration-screen').style.display = 'flex';
+        }
+
+        function registerAndGoDashboard() {
+            const nameInput = document.getElementById('reg-name');
+            const phoneInput = document.getElementById('reg-phone');
+            let userName = nameInput.value.trim();
+            const userPhone = phoneInput.value.trim();
+            
+            if(userName === "") {
+                alert("لطفاً نام خود را وارد کنید");
+                return;
+            }
+            if(userPhone === "") {
+                alert("لطفاً شماره موبایل را وارد کنید");
+                return;
+            }
+            if(!/^\d{11}$/.test(userPhone) && !/^09\d{9}$/.test(userPhone)) {
+                alert("شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود");
+                return;
+            }
+            
+            const userData = {
+                name: userName,
+                phone: userPhone,
+                registeredAt: new Date().toISOString()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+            
+            document.getElementById('user-name-display').innerText = userName;
+            document.getElementById('registration-screen').style.display = 'none';
+            const dashboard = document.getElementById('dashboard-screen');
+            dashboard.style.display = 'flex';
+        }
+        
+        function checkExistingUser() {
+            const savedUser = localStorage.getItem(STORAGE_KEY);
+            if(savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('user-name-display').innerText = user.name;
+                document.getElementById('intro-screen').style.display = 'none';
+                document.querySelectorAll('.slide').forEach(slide => slide.style.display = 'none');
+                document.getElementById('registration-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'flex';
+                return true;
+            }
+            return false;
+        }
+
+        function startIntroAndSlides() {
+            const image = document.getElementById('main-image');
+            const text = document.getElementById('logo-text');
+            
+            setTimeout(() => { 
+                if(image) { image.style.transform = 'scale(1)'; image.style.opacity = '1'; }
+            }, 400);
+            setTimeout(() => { 
+                if(text) text.style.opacity = '1'; 
+            }, 1600);
+            
+            setTimeout(() => {
+                const introScreen = document.getElementById('intro-screen');
+                if(introScreen) {
+                    introScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        introScreen.style.display = 'none';
+                        showSlide(1);
+                    }, 800);
+                }
+            }, 3800);
+        }
+        
+        function showComplaintModal() {
+            document.getElementById('complaint-modal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('complaint-modal').style.display = 'none';
+        }
+        
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.opacity = '0';
+                setTimeout(() => {
+                    notif.style.display = 'none';
+                    notif.style.opacity = '1';
+                }, 300);
+            }, 2500);
+        }
+        
+        function scrollToDownloads() {
+            const downloadsSection = document.getElementById('downloads-section');
+            if(downloadsSection) {
+                downloadsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showNotification('📱 لیست دانلودها در پایین صفحه قرار دارد');
+            }
+        }
+        
+        function showAndroidGuide() {
+            document.getElementById('dashboard-screen').style.display = 'none';
+            document.getElementById('android-guide').style.display = 'flex';
+        }
+        
+        function closeAndroidGuide() {
+            document.getElementById('android-guide').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'flex';
+        }
+        
+        function showIOSGuide() {
+            document.getElementById('dashboard-screen').style.display = 'none';
+            document.getElementById('ios-guide').style.display = 'flex';
+        }
+        
+        function closeIOSGuide() {
+            document.getElementById('ios-guide').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'flex';
+        }
+        
+        function showWindowsGuide() {
+            document.getElementById('dashboard-screen').style.display = 'none';
+            document.getElementById('windows-guide').style.display = 'flex';
+        }
+        
+        function closeWindowsGuide() {
+            document.getElementById('windows-guide').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'flex';
+        }
+        
+        function bindEvents() {
+            document.getElementById('next-1')?.addEventListener('click', nextSlide);
+            document.getElementById('next-2')?.addEventListener('click', nextSlide);
+            document.getElementById('next-3')?.addEventListener('click', nextSlide);
+            document.getElementById('enter-system-btn')?.addEventListener('click', showRegistration);
+            document.getElementById('submit-register')?.addEventListener('click', registerAndGoDashboard);
+            document.getElementById('complaint-btn')?.addEventListener('click', showComplaintModal);
+            document.getElementById('download-guide-btn')?.addEventListener('click', scrollToDownloads);
+            
+            let touchStartY = 0;
+            document.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; });
+            document.addEventListener('touchend', e => {
+                if (!canGoNext) return;
+                const touchEndY = e.changedTouches[0].screenY;
+                if (touchEndY < touchStartY - 80 && currentSlide < 4) {
+                    nextSlide();
+                }
+            });
+        }
+        
+        window.onload = function() {
+            createStars();
+            bindEvents();
+            const hasUser = checkExistingUser();
+            if(!hasUser) {
+                startIntroAndSlides();
+            }
+        };
+    </script>
+</body>
+</html>
